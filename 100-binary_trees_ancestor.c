@@ -57,9 +57,14 @@ binary_tree_t *find_ancestor(binary_tree_t *root,
 binary_tree_t *binary_trees_ancestor(const binary_tree_t *first,
 				     const binary_tree_t *second)
 {
+	binary_tree_t *root;
+
 	if (!first || !second)
 		return (NULL);
 
-	return (find_ancestor(find_root((binary_tree_t *)first),
-			      first, second));
+	root = find_root((binary_tree_t *)first);
+	if (root)
+		return (find_ancestor(root, first, second));
+
+	return (NULL);
 }
