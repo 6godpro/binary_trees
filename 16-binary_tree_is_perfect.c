@@ -2,10 +2,11 @@
 
 
 /* helper functions */
-int get_height(const binary_tree_t *tree);
 int get_max(int x, int y);
-int count_leaves(const binary_tree_t *tree);
 int _pow(int base, int exp);
+int get_height(const binary_tree_t *tree);
+int count_leaves(const binary_tree_t *tree);
+
 
 /**
  * binary_tree_is_perfect - Checks if a given binary tree is perfect.
@@ -15,7 +16,7 @@ int _pow(int base, int exp);
  */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	int height, actual_leaves, total_leaves;
+	int height, actual_leaves, expected_leaves;
 
 	if (tree == NULL)
 		return (0);
@@ -23,9 +24,9 @@ int binary_tree_is_perfect(const binary_tree_t *tree)
 	height = get_height(tree);
 	actual_leaves = count_leaves(tree);
 
-	total_leaves = _pow(2, height - 1);
+	expected_leaves = _pow(2, height - 1);
 
-	if (actual_leaves != total_leaves)
+	if (actual_leaves != expected_leaves)
 		return (0);
 
 	return (1);
@@ -95,10 +96,11 @@ int count_leaves(const binary_tree_t *tree)
 	if (tree == NULL)
 		return (0);
 
+	if (!tree->left && !tree->right)
+		return (1);
+
 	l = count_leaves(tree->left);
 	r = count_leaves(tree->right);
-	if (tree->left && tree->right)
-		return (0 + l + r);
 
-	return (1 + l + r);
+	return (l + r);
 }
