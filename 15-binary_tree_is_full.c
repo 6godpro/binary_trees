@@ -14,8 +14,10 @@ int binary_tree_is_full(const binary_tree_t *tree)
 {
 	int full;
 
-	full = is_full(tree);
+	if (tree == NULL)
+		return (0);
 
+	full = is_full(tree);
 	if (full > 1)
 		full = 1;
 
