@@ -36,12 +36,16 @@ int is_full(const binary_tree_t *tree)
 	int left = 1, right = 1;
 
 	if (tree == NULL)
-		return (0);
+		return (1);
 
 	left += is_full(tree->left);
 	right += is_full(tree->right);
-	if (!tree->left || !tree->right)
+
+	if (!tree->left && !tree->right)
+		return (1);
+
+	if (!tree->left || !tree->right || (left != right))
 		return (0);
 
-	return (left & right);
+	return (left && right);
 }
