@@ -94,6 +94,7 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 {
 	queue_t *queue;
 	binary_tree_t *current;
+	int flag = 0;
 
 	if (tree == NULL)
 		return (0);
@@ -107,30 +108,32 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 	while (queue)
 	{
 		current = queue->node;
-		if (current->left && current->right)
+
+		if (current->left)
 		{
-			push_to_queue(&queue, current->left);
-			push_to_queue(&queue, current->right);
-		}
-		else if (current->left && !current->right)
-		{
-			if (current->parent && current->parent->right
-			    && (current->parent->right->left ||
-				current->parent->right->right))
+			if (flag == 1)
 			{
 				free_queue(queue);
 				return (0);
 			}
 			push_to_queue(&queue, current->left);
 		}
-		else if (!current->left && current->right)
+		else
+			flag = 1;
+
+		if (current->right)
 		{
-			free_queue(queue);
-			return (0);
+			if (flag == 1)
+			{
+				free_queue(queue);
+				return (0);
+			}
+			push_to_queue(&queue, current->right);
 		}
+		else
+			flag = 1;
 		remove_from_queue(&queue);
 	}
 
-	free(queue);
 	return (1);
 }
