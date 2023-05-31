@@ -50,7 +50,6 @@ void push_to_queue(queue_t **queue, binary_tree_t *node)
 	}
 }
 
-
 /**
  * remove_from_queue - Removes an item from a queue.
  * @queue: The queue from which an item is to be removed.
@@ -68,20 +67,37 @@ void remove_from_queue(queue_t **queue)
 }
 
 /**
- * free_queue - Frees a queue.
- * @queue: The queue to be freed.
+ * is_valid - Checks if a node is a valid complete node.
+ * @queue: The queue to the prepend a node to if it is valid.
+ * @node: The node to validate.
+ * @flag: A sentinel value indicating the validity of a node.
+ * Return: If the node is valid - 1.
+ *         Otherwise - 0.
  */
-void free_queue(queue_t *queue)
+int is_valid(queue_t *queue, const binary_tree_t *node, int *flag)
 {
-	queue_t *tmp;
-
-	while (queue)
+	if (node->left)
 	{
-		tmp = queue->next;
-		free(queue);
-		queue = tmp;
+		/* Occurrence of Right node without Left node */
+		if (*flag == 1)
+			return (0);
+		push_to_queue(&queue, node->left);
 	}
+	else
+		*flag = 1;
+
+	if (node->right)
+	{
+		/* Occurence of Left node without Right node */
+		if (*flag == 1)
+			return (0);
+		push_to_queue(&queue, node->right);
+	}
+	else
+		*flag = 1;
+	return (1);
 }
+
 
 /**
  * binary_tree_is_complete - Checks if a binary tree is complete.
@@ -92,9 +108,8 @@ void free_queue(queue_t *queue)
  */
 int binary_tree_is_complete(const binary_tree_t *tree)
 {
-	queue_t *queue;
-	binary_tree_t *current;
-	int flag = 0;
+	queue_t *queue, *tmp;
+	int flag = 0, valid;
 
 	if (tree == NULL)
 		return (0);
@@ -107,33 +122,21 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 
 	while (queue)
 	{
-		current = queue->node;
-
-		if (current->left)
-		{
-			if (flag == 1)
-			{
-				free_queue(queue);
-				return (0);
-			}
-			push_to_queue(&queue, current->left);
-		}
-		else
-			flag = 1;
-
-		if (current->right)
-		{
-			if (flag == 1)
-			{
-				free_queue(queue);
-				return (0);
-			}
-			push_to_queue(&queue, current->right);
-		}
-		else
-			flag = 1;
+		valid = is_valid(queue, queue->node, &flag);
+		if (valid == 0)
+			break;
 		remove_from_queue(&queue);
 	}
 
+	if (valid == 0)
+	{
+		while (queue)
+		{
+			tmp = queue->next;
+			free(queue);
+			queue = tmp;
+		}
+		return (0);
+	}
 	return (1);
 }
