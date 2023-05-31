@@ -13,11 +13,14 @@ binary_tree_t *find_ancestor(const binary_tree_t *root,
 			     const binary_tree_t *second)
 {
 	binary_tree_t *left, *right;
+	
+	if (root == NULL)
+		return (NULL);
 
 	if (root == first || root == second)
 		return ((binary_tree_t *)root);
 
-	if (root && !root->left && !root->right)
+	if (!root->left && !root->right)
 		return (NULL);
 
 	left = find_ancestor(root->left, first, second);
