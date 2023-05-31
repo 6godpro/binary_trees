@@ -114,8 +114,9 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 		}
 		else if (current->left && !current->right)
 		{
-			if (current->parent->right->left ||
-			    current->parent->right->right)
+			if (current->parent && current->parent->right
+			    && (current->parent->right->left ||
+				current->parent->right->right))
 			{
 				free_queue(queue);
 				return (0);
